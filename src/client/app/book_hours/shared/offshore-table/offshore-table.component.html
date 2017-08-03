@@ -1,0 +1,52 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Offshore Price(s)</h3>
+    </div>
+    <div class="panel-body">
+        <div id="onShoreAccordion" role="tablist" aria-multiselectable="true">
+            <div class="text-warning" *ngIf="getOffshoreList()?.length<=0">
+                Please add resource(s).
+            </div>
+            <div class="panel panel-info" *ngFor="let resource of getOffshoreList(); let i = index">
+                <div class="panel-heading" role="tab" id="heading{{i}}">
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#onShoreAccordion" href="#collapse-offshore-{{i}}" aria-expanded="false" aria-controls="collapse-offshore-$index">
+                            {{resource?.resourceType?.resourceType}}, {{resource?.skill?.skillName}}, {{resource?.businessLine?.businesslineName}}, 
+                            {{resource?.band?.bandName}}, {{resource?.stayType?.stayType}}, {{resource?.price|eurCcyFmt}}
+                        </a>
+                        <span class="glyphicon glyphicon-trash pull-right"
+                                    (click)="deleteResource(resource)"></span>
+                    </h4>
+                </div>
+                <div id="collapse-offshore-{{i}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading-offshore-$index">
+                   <div class="col-md-3" style="padding-top:5px;" *ngFor="let month of resource.months">
+                            <div class="list-group">
+                                <div class="list-group-item list-group-item-warning">{{month.name}}
+                                        <span class="badge pull-right margin-right: -5px" 
+                                            [title]="month.total|eurCcyFmt">{{month.total|eurCcyFmt}}</span></div>
+                                <div class="list-group-item">
+                                    <input type="text" class="input-sm" title="W1:{{month.weeks.w1|eurCcyFmt}}" 
+                                            [(ngModel)]="month.weeks.w1" placeholder="W1" style="width:47%;margin-right:1%"
+                                            (ngModelChange)="month.calculateTotal()"/>
+                                    <input type="text" class="input-sm" title="W2:{{month.weeks.w2|eurCcyFmt}}" 
+                                            [(ngModel)]="month.weeks.w2" placeholder="W2" style="width:47%;"
+                                            (ngModelChange)="month.calculateTotal()"/>
+                                </div>
+                                <div class="list-group-item">
+                                    <input type="text" class="input-sm" title="W3:{{month.weeks.w3|eurCcyFmt}}" 
+                                        [(ngModel)]="month.weeks.w3" placeholder="W3" style="width:47%;margin-right:1%"
+                                        (ngModelChange)="month.calculateTotal()"/>
+                                    <input type="text" class="input-sm" title="W4:{{month.weeks.w4|eurCcyFmt}}"
+                                        [(ngModel)]="month.weeks.w4" placeholder="W4" style="width:47%"
+                                        (ngModelChange)="month.calculateTotal()"/>
+                                </div>
+                                <div class="list-group-item list-group-item-danger" *ngIf="month.isError">
+                                    <label>Only 0-9</label>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
